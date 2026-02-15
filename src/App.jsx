@@ -5,6 +5,7 @@ import Catalog from './components/Catalog';
 import ProductModal from './components/ProductModal';
 import QuoteCart from './components/QuoteCart';
 import CompareModal from './components/CompareModal';
+import MobileNav from './components/MobileNav'; // Import the new mobile nav
 import { Footer, FloatingWhatsApp } from './components/Footer';
 import { StatsSection, Features, Newsletter, Testimonials, ProcessFlow, FAQ } from './components/HomeSections';
 import { Contact, History, EnquiryForm, FastOrder } from './components/OtherPages';
@@ -198,12 +199,13 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F4F6F8] font-sans text-gray-800 flex flex-col">
+        <div className="min-h-screen bg-[#F4F6F8] font-sans text-gray-800 flex flex-col pb-16 md:pb-0">
             <AnimatePresence>
                 {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
             </AnimatePresence>
 
             <FlashSaleBanner />
+            {/* Header simplified for mobile or kept as is, but MobileNav added */}
             <Header
                 activeTab={activeTab}
                 setActiveTab={(tab) => { setActiveTab(tab); window.scrollTo(0, 0); }}
@@ -220,7 +222,18 @@ const App = () => {
             </main>
 
             <Footer />
-            <FloatingWhatsApp />
+            {/* Hide Floating WhatsApp on mobile if MobileNav is covering it, or adjust position */}
+            <div className="hidden md:block">
+                <FloatingWhatsApp />
+            </div>
+
+            {/* Mobile Bottom Navigation */}
+            <MobileNav
+                activeTab={activeTab}
+                setActiveTab={(tab) => { setActiveTab(tab); window.scrollTo(0, 0); }}
+                cartCount={cart.reduce((a, b) => a + b.qty, 0)}
+                toggleCart={() => setIsCartOpen(true)}
+            />
 
             <QuoteCart
                 isOpen={isCartOpen}

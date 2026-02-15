@@ -12,7 +12,7 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
     const [selectedResolutions, setSelectedResolutions] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]); // Array of IDs
     const [page, setPage] = useState(1);
-    const ITEMS_PER_PAGE = 9;
+    const ITEMS_PER_PAGE = 8; // Changed to 8 for better grid alignment
 
     // Flattened Database for simpler filtering
     const allProducts = useMemo(() => PRODUCT_DATABASE.flatMap(cat => cat.items.map(item => ({ ...item, category: cat.category }))), []);
@@ -76,14 +76,24 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
         document.body.removeChild(link);
     };
 
+    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
     return (
-        <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8 bg-[#F4F6F8]">
+        <div className="py-4 md:py-12 max-w-7xl mx-auto px-2 md:px-8 flex flex-col md:flex-row gap-4 md:gap-8 bg-[#F4F6F8]">
+
+            {/* Mobile Filter Toggle */}
+            <button
+                className="md:hidden w-full bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center gap-2 font-bold text-[#003366]"
+                onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+            >
+                <Sliders size={18} /> {isMobileFiltersOpen ? 'Hide Filters' : 'Show Filters'}
+            </button>
 
             {/* Sidebar Filters */}
             <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                className="w-full md:w-64 flex-shrink-0 space-y-8"
+                initial={false}
+                animate={{ height: isMobileFiltersOpen ? 'auto' : 0, opacity: isMobileFiltersOpen ? 1 : 0 }}
+                className={`w-full md:w-64 flex-shrink-0 space-y-8 overflow-hidden md:h-auto md:opacity-100 md:block ${isMobileFiltersOpen ? 'block' : 'hidden md:block'}`}
             >
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
                     <div className="flex items-center gap-2 font-bold text-[#003366] mb-6 border-b border-gray-100 pb-2">
@@ -136,31 +146,27 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
             {/* Main Content */}
             <div className="flex-1">
                 {/* Toolbar */}
-                <motion.div
-                    initial={{ y: -10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    className="flex flex-wrap justify-between items-center mb-6 gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100"
-                >
-                    <div className="text-sm font-medium text-gray-500">
-                        Showing <span className="text-[#003366] font-bold">{filtered.length}</span> products
+                <div className="flex flex-wrap justify-between items-center mb-4 md:mb-6 gap-2 md:gap-4 bg-white p-3 md:p-4 rounded-xl shadow-sm border border-gray-100 text-xs md:text-sm">
+                    <div className="font-medium text-gray-500">
+                        <span className="text-[#003366] font-bold">{filtered.length}</span> items
                     </div>
 
-                    <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <button
                             onClick={handleDownloadPriceList}
-                            className="flex items-center gap-2 px-4 py-2 border border-[#003366] text-[#003366] rounded-xl hover:bg-blue-50 font-bold transition-colors text-xs"
+                            className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-[#003366] text-[#003366] rounded-lg hover:bg-blue-50 font-bold transition-colors"
                         >
-                            <Download size={14} /> Download CSV
+                            <Download size={14} /> CSV
                         </button>
 
                         <div className="flex bg-gray-100 rounded-lg p-1">
-                            <button onClick={() => setViewMode('grid')} className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow text-[#003366]' : 'text-gray-400'}`}><Grid size={18} /></button>
-                            <button onClick={() => setViewMode('list')} className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow text-[#003366]' : 'text-gray-400'}`}><List size={18} /></button>
+                            <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow text-[#003366]' : 'text-gray-400'}`}><Grid size={16} /></button>
+                            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow text-[#003366]' : 'text-gray-400'}`}><List size={16} /></button>
                         </div>
 
                         <div className="relative">
                             <select
-                                className="appearance-none bg-gray-100 text-sm font-medium text-gray-700 py-2 pl-3 pr-8 rounded-lg border-none focus:ring-2 focus:ring-[#003366] cursor-pointer outline-none"
+                                className="appearance-none bg-gray-100 font-medium text-gray-700 py-1.5 pl-2 pr-6 rounded-lg border-none focus:ring-1 focus:ring-[#003366] cursor-pointer outline-none"
                                 value={sortOrder}
                                 onChange={(e) => setSortOrder(e.target.value)}
                             >
@@ -168,29 +174,24 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
                                 <option value="lowToHigh">Price: Low to High</option>
                                 <option value="highToLow">Price: High to Low</option>
                             </select>
-                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
-                                {sortOrder === 'lowToHigh' ? <ArrowUp size={14} /> : sortOrder === 'highToLow' ? <ArrowDown size={14} /> : <div className="text-[10px]">▼</div>}
+                            <div className="absolute right-1 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
+                                <ArrowDown size={12} />
                             </div>
                         </div>
                     </div>
-                </motion.div>
+                </div>
 
-                {/* Product Grid */}
+                {/* Product Grid - Mobile Optimized (2 Columns) */}
                 <AnimatePresence mode="wait">
                     {paginatedItems.length === 0 ? (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200"
-                        >
+                        <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
                             <Search className="mx-auto h-12 w-12 text-gray-300 mb-2" />
                             <p className="text-gray-500">No products match your criteria.</p>
-                        </motion.div>
+                        </div>
                     ) : (
                         <motion.div
                             layout
-                            className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
+                            className={`grid gap-3 md:gap-6 ${viewMode === 'grid' ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
                         >
                             {paginatedItems.map((item) => (
                                 <ProductCard
@@ -210,12 +211,12 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="flex justify-center gap-2 mt-12">
+                    <div className="flex justify-center gap-2 mt-8 md:mt-12 pb-20 md:pb-0">
                         {[...Array(totalPages)].map((_, i) => (
                             <button
                                 key={i}
                                 onClick={() => { setPage(i + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                                className={`w-10 h-10 rounded-lg font-bold text-sm transition-all ${page === i + 1 ? 'bg-[#003366] text-white shadow-lg scale-110' : 'bg-white text-gray-500 hover:bg-gray-100'}`}
+                                className={`w-8 h-8 md:w-10 md:h-10 rounded-lg font-bold text-xs md:text-sm transition-all ${page === i + 1 ? 'bg-[#003366] text-white shadow-lg scale-110' : 'bg-white text-gray-500 hover:bg-gray-100'}`}
                             >
                                 {i + 1}
                             </button>
@@ -231,17 +232,18 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
                         initial={{ y: 50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: 50, opacity: 0 }}
-                        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-[#003366] text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-6 border border-white/20 backdrop-blur-md"
+                        className="fixed bottom-20 md:bottom-8 left-1/2 transform -translate-x-1/2 z-40 bg-[#003366] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-4 border border-white/20 backdrop-blur-md w-[90%] md:w-auto justify-between md:justify-start"
                     >
-                        <span className="font-bold whitespace-nowrap">{selectedItems.length} items selected</span>
-                        <div className="h-6 w-px bg-white/20"></div>
-                        <button
-                            onClick={handleBulkAdd}
-                            className="bg-[#FFD700] text-[#003366] px-4 py-2 rounded-lg font-bold hover:bg-white transition-colors text-sm shadow-sm whitespace-nowrap"
-                        >
-                            Add All to Quote
-                        </button>
-                        <button onClick={() => setSelectedItems([])} className="text-white/70 hover:text-white text-sm underline">Cancel</button>
+                        <span className="font-bold text-sm whitespace-nowrap">{selectedItems.length} selected</span>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleBulkAdd}
+                                className="bg-[#FFD700] text-[#003366] px-4 py-1.5 rounded-full font-bold hover:bg-white transition-colors text-xs shadow-sm whitespace-nowrap"
+                            >
+                                Add to Quote
+                            </button>
+                            <button onClick={() => setSelectedItems([])} className="text-white/70 hover:text-white text-xs underline">Cancel</button>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
