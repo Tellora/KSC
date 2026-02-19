@@ -38,15 +38,23 @@ const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, s
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-[#FFD700] rounded-full opacity-0 group-hover:opacity-20 blur transition-opacity duration-300"></div>
                     <input
                         type="text"
-                        placeholder="Search models..."
-                        className="w-full bg-[#002850] text-white placeholder-blue-300/50 rounded-full px-4 py-2 md:px-6 md:py-3 pl-10 md:pl-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition-all shadow-inner border border-white/5"
+                        placeholder="Search model codes (e.g. 3256FLSM)..."
+                        className="w-full bg-[#002850] text-white placeholder-blue-300/50 rounded-full px-4 py-2 md:px-6 md:py-3 pl-10 md:pl-12 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition-all shadow-inner border border-white/5"
                         value={searchQuery}
                         onChange={(e) => {
                             setSearchQuery(e.target.value);
                             if (e.target.value) setActiveTab('catalog');
                         }}
                     />
-                    <Search className="absolute left-3 top-2.5 md:top-3.5 text-blue-300 group-hover:text-[#FFD700] transition-colors" size={16} md:size={18} />
+                    <Search className="absolute left-3 top-2.5 md:top-3.5 text-blue-300 group-hover:text-[#FFD700] transition-colors" size={18} />
+                    {searchQuery && (
+                        <button
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-3 top-2 md:top-3 p-1 hover:bg-white/10 rounded-full text-blue-300 transition-colors"
+                        >
+                            <X size={16} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Desktop Nav */}
@@ -72,23 +80,30 @@ const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, s
                     })}
                 </nav>
 
-                {/* Icons - Mobile Optimized (Hidden on mobile if Bottom Nav used, but kept for tablet/desktop) */}
-                <div className="hidden md:flex items-center gap-4 text-white">
-                    <button
-                        onClick={toggleCart}
-                        className="relative p-2 hover:bg-white/10 rounded-full transition-colors group"
-                    >
-                        <ShoppingCart size={24} className="group-hover:text-[#FFD700] transition-colors" />
-                        {cartCount > 0 && (
-                            <motion.span
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                className="absolute -top-1 -right-1 bg-[#FFD700] text-[#003366] text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg ring-2 ring-[#003366]"
-                            >
-                                {cartCount}
-                            </motion.span>
-                        )}
-                    </button>
+                {/* Mobile Quick Utility & Support Indicator */}
+                <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end hidden xs:flex mr-1">
+                        <span className="text-[7px] font-black text-[#FFD700] animate-pulse uppercase tracking-widest leading-tight">Live Support</span>
+                        <span className="text-[10px] font-black text-white leading-none">ONLINE</span>
+                    </div>
+
+                    <div className="hidden md:flex items-center gap-4 text-white">
+                        <button
+                            onClick={toggleCart}
+                            className="relative p-2 hover:bg-white/10 rounded-full transition-colors group"
+                        >
+                            <ShoppingCart size={24} className="group-hover:text-[#FFD700] transition-colors" />
+                            {cartCount > 0 && (
+                                <motion.span
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="absolute -top-1 -right-1 bg-[#FFD700] text-[#003366] text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg ring-2 ring-[#003366]"
+                                >
+                                    {cartCount}
+                                </motion.span>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>

@@ -7,8 +7,8 @@ import QuoteCart from './components/QuoteCart';
 import CompareModal from './components/CompareModal';
 import MobileNav from './components/MobileNav'; // Import the new mobile nav
 import { Footer, FloatingWhatsApp } from './components/Footer';
-import { StatsSection, Features, Newsletter, Testimonials, ProcessFlow, FAQ } from './components/HomeSections';
-import { Contact, History, EnquiryForm, FastOrder } from './components/OtherPages';
+import { StatsSection, Features, Newsletter, Testimonials, ProcessFlow, FAQ, BrandPartners, DeliveryTicker } from './components/HomeSections';
+import { Contact, History, EnquiryForm, FastOrder, QuickTools } from './components/OtherPages';
 import { Zap, Truck, CheckCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -136,9 +136,11 @@ const App = () => {
                 return (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                         <Hero setActiveTab={setActiveTab} />
+                        <DeliveryTicker />
                         <StatsSection />
                         <ProcessFlow />
                         <Features />
+                        <BrandPartners />
                         <div className="py-24 text-center bg-white relative overflow-hidden bg-noise">
                             {/* Added Featured Categories Section */}
                             <motion.div
@@ -193,6 +195,7 @@ const App = () => {
             case 'history': return <History orders={orders} />;
             case 'bulkenquiry': return <EnquiryForm onFormSubmit={() => showToast('Enquiry Sent Successfully', 'success')} />;
             case 'contact': return <Contact />;
+            case 'quicktools': return <QuickTools />;
             case 'fastorder': return <FastOrder addToCart={addToCart} />;
             default: return <Hero setActiveTab={setActiveTab} />;
         }
@@ -221,7 +224,10 @@ const App = () => {
                 </AnimatePresence>
             </main>
 
-            <Footer />
+            <Footer
+                setActiveTab={(tab) => { setActiveTab(tab); window.scrollTo(0, 0); }}
+                setSearchQuery={setSearchQuery}
+            />
             {/* Hide Floating WhatsApp on mobile if MobileNav is covering it, or adjust position */}
             <div className="hidden md:block">
                 <FloatingWhatsApp />

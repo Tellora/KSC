@@ -23,19 +23,19 @@ const ScrollReveal = ({ children, className = "", delay = 0 }) => {
 
 export const StatsSection = () => {
     return (
-        <section className="bg-[#002244] py-12 relative z-20 shadow-2xl overflow-hidden">
+        <section className="bg-[#002244] py-8 md:py-12 relative z-20 shadow-2xl overflow-hidden">
             <div className="absolute inset-0 bg-grid-pattern opacity-5 mix-blend-overlay"></div>
-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white relative z-10">
+            <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center text-white relative z-10">
                 {[
-                    { val: "5000+", label: "Units Sold/Mo" },
-                    { val: "500+", label: "Retail Partners" },
-                    { val: "18", label: "States Served" },
-                    { val: "98%", label: "On-Time Dispatch" }
+                    { val: "5000+", label: "Units Sold" },
+                    { val: "500+", label: "Dealers" },
+                    { val: "18", label: "States" },
+                    { val: "98%", label: "Accuracy" }
                 ].map((stat, i) => (
                     <ScrollReveal key={i} delay={i * 0.1}>
-                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors group cursor-default">
-                            <div className="text-4xl font-black text-[#FFD700] mb-2 font-mono group-hover:scale-110 transition-transform duration-300">{stat.val}</div>
-                            <div className="text-blue-200 text-xs font-bold uppercase tracking-widest">{stat.label}</div>
+                        <div className="p-3 md:p-4 bg-white/5 rounded-xl md:rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors group cursor-default">
+                            <div className="text-2xl md:text-4xl font-black text-[#FFD700] mb-1 font-mono group-hover:scale-110 transition-transform duration-300">{stat.val}</div>
+                            <div className="text-blue-200 text-[8px] md:text-xs font-bold uppercase tracking-widest leading-none">{stat.label}</div>
                         </div>
                     </ScrollReveal>
                 ))}
@@ -46,36 +46,38 @@ export const StatsSection = () => {
 
 export const ProcessFlow = () => {
     const steps = [
-        { icon: UserCheck, title: "Register", desc: "Sign up via WhatsApp to get verified dealer status." },
-        { icon: Database, title: "Browse Catalog", desc: "Access real-time inventory & wholesale pricing." },
-        { icon: PenTool, title: "Create Quote", desc: "Select models and generate a proforma invoice." },
-        { icon: Truck, title: "Fast Dispatch", desc: "Orders dispatched heavily packed within 24 hours." },
+        { icon: UserCheck, title: "Register", desc: "Verify dealer status on WhatsApp." },
+        { icon: Database, title: "Browse", desc: "Access wholesale rates in real-time." },
+        { icon: PenTool, title: "Quote", desc: "Instantly generate proforma invoices." },
+        { icon: Truck, title: "Dispatch", desc: "Heavy crate packing within 24h." },
     ];
 
     return (
-        <div className="py-20 bg-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-[80px] -z-10"></div>
+        <div className="py-16 md:py-24 bg-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-[80px] -z-10 opacity-50 md:opacity-100"></div>
             <div className="max-w-7xl mx-auto px-4">
-                <ScrollReveal className="text-center mb-16">
-                    <h2 className="text-3xl font-black text-[#003366] mb-4">How It Works</h2>
-                    <p className="text-gray-500 max-w-xl mx-auto">Seamless procurement process designed for high-volume retailers.</p>
+                <ScrollReveal className="text-center mb-12 md:mb-16">
+                    <h2 className="text-2xl md:text-4xl font-black text-[#003366] mb-3 md:mb-4">Global Trade Flow</h2>
+                    <p className="text-gray-500 text-sm md:text-lg max-w-xl mx-auto px-4">Enterprise-grade procurement designed for modern high-volume retailers.</p>
                 </ScrollReveal>
 
-                <div className="grid md:grid-cols-4 gap-8 relative">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 relative">
                     {/* Connecting Line (Desktop) */}
-                    <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-gray-100 -z-10"></div>
+                    <div className="hidden lg:block absolute top-12 left-0 w-full h-0.5 bg-gray-100 -z-10"></div>
 
                     {steps.map((step, i) => (
-                        <ScrollReveal key={i} delay={i * 0.2}>
-                            <div className="flex flex-col items-center text-center group">
-                                <div className="w-24 h-24 bg-white border border-gray-100 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:bg-[#003366] group-hover:text-[#FFD700] transition-all duration-300 relative z-10">
-                                    <step.icon size={32} />
-                                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#FFD700] rounded-full text-[10px] font-bold text-[#003366] flex items-center justify-center shadow-md">
+                        <ScrollReveal key={i} delay={i * 0.1}>
+                            <div className="flex flex-row md:flex-col items-center md:items-center text-left md:text-center group bg-gray-50/50 md:bg-transparent p-4 md:p-0 rounded-2xl border border-gray-100/50 md:border-none shadow-sm md:shadow-none">
+                                <div className="w-16 h-16 md:w-24 md:h-24 bg-white border border-gray-100 rounded-full flex items-center justify-center mb-0 md:mb-6 mr-4 md:mr-0 shadow-lg group-hover:bg-[#003366] group-hover:text-[#FFD700] transition-all duration-300 relative z-10 shrink-0">
+                                    <step.icon size={24} md:size={32} />
+                                    <div className="absolute -top-1 -right-1 md:top-0 md:right-0 w-5 h-5 md:w-6 md:h-6 bg-[#FFD700] rounded-full text-[9px] md:text-[10px] font-black text-[#003366] flex items-center justify-center shadow-md border-2 border-white">
                                         {i + 1}
                                     </div>
                                 </div>
-                                <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-[#003366] transition-colors">{step.title}</h3>
-                                <p className="text-sm text-gray-500 leading-relaxed px-4">{step.desc}</p>
+                                <div>
+                                    <h3 className="font-black text-base md:text-xl text-[#003366] mb-1 md:mb-2 group-hover:text-blue-600 transition-colors">{step.title}</h3>
+                                    <p className="text-xs md:text-sm text-gray-500 overflow-hidden leading-relaxed font-medium">{step.desc}</p>
+                                </div>
                             </div>
                         </ScrollReveal>
                     ))}
@@ -247,3 +249,45 @@ export const Testimonials = () => (
         </div>
     </div>
 );
+export const BrandPartners = () => {
+    const brands = ["Samsung", "LG", "Sony", "Panasonic", "TCL", "Hisense", "Xiaomi"];
+    return (
+        <section className="py-16 bg-white border-t border-gray-50 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4">
+                <p className="text-center text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-10">Compatible Spares & Service Partners</p>
+                <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+                    {brands.map((b, i) => (
+                        <div key={i} className="text-2xl font-black text-gray-900 tracking-tighter italic">{b}</div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export const DeliveryTicker = () => {
+    const orders = [
+        "15 Units Dispatched to Jaipur",
+        "8 Units Dispatched to New Delhi",
+        "22 Units Dispatched to Kanpur",
+        "5 Units Dispatched to Mumbai",
+        "12 Units Dispatched to Lucknow",
+        "43 Inch 4K Stock Refilled"
+    ];
+
+    return (
+        <div className="bg-[#FFD700] py-2 overflow-hidden whitespace-nowrap border-y border-[#003366]/10">
+            <div className="flex animate-marquee gap-10">
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex gap-10">
+                        {orders.map((o, idx) => (
+                            <span key={idx} className="text-[10px] font-black text-[#003366] uppercase flex items-center gap-2">
+                                <CheckCircle size={10} /> {o}
+                            </span>
+                        ))}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};

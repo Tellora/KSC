@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Award, CheckCircle, ChevronRight, ClipboardList, Info, ArrowUpDown, Send, Clock, List } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { MapPin, Phone, Award, CheckCircle, ChevronRight, ClipboardList, Info, ArrowUpDown, Send, Clock, List, TrendingUp, Plus, Zap, ShieldCheck, Download, Package, Truck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BUSINESS_CONFIG, PRODUCT_DATABASE } from '../data/config';
 
 // --- Contact Component ---
@@ -84,10 +84,14 @@ export const Contact = () => (
 // --- FastOrder Component ---
 export const FastOrder = ({ addToCart }) => {
     const [input, setInput] = useState('');
+    const [lastAdded, setLastAdded] = useState([]);
+
+    const topModels = PRODUCT_DATABASE.flatMap(c => c.items).slice(0, 4);
 
     const handleParse = () => {
         const lines = input.split('\n');
         let addedCount = 0;
+        let newItems = [];
 
         lines.forEach(line => {
             const parts = line.trim().split(/\s+/);
@@ -101,62 +105,137 @@ export const FastOrder = ({ addToCart }) => {
                 if (foundItem) {
                     addToCart(foundItem, qty);
                     addedCount++;
+                    newItems.push({ model: foundItem.model, qty });
                 }
             }
         });
 
-        if (addedCount > 0) alert(`Processed ${addedCount} items. Check your quote.`);
-        else alert("No matching products found. Format: ModelCode Quantity");
+        if (addedCount > 0) {
+            setLastAdded(newItems);
+            alert(`Processed ${addedCount} items. Check your quote.`);
+        } else {
+            alert("No matching products found. Format: ModelCode Quantity");
+        }
         setInput('');
     };
 
     return (
-        <div className="py-20 max-w-4xl mx-auto px-4">
-            <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8"
-            >
-                <div className="flex items-center gap-4 mb-6 border-b border-gray-100 pb-4">
-                    <div className="p-3 bg-blue-50 rounded-xl text-[#003366]"><ClipboardList size={32} /></div>
-                    <div>
-                        <h2 className="text-2xl font-black text-[#003366]">Fast Order Pad</h2>
-                        <p className="text-gray-500 text-sm">Quickly add items by model number</p>
+        <div className="py-20 max-w-6xl mx-auto px-4">
+            <div className="grid lg:grid-cols-3 gap-8 items-start">
+                {/* Left Column: Quick Select */}
+                <div className="lg:col-span-1 space-y-6">
+                    <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <h4 className="font-black text-[#003366] uppercase text-xs tracking-widest mb-6 border-b border-gray-100 pb-4 flex items-center gap-2">
+                            <TrendingUp size={14} className="text-[#FFD700]" /> Top Movers
+                        </h4>
+                        <div className="grid gap-3">
+                            {topModels.map(item => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setInput(prev => prev + `${item.model} 5\n`)}
+                                    className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-100 group"
+                                >
+                                    <div className="text-left">
+                                        <p className="font-bold text-[#003366] text-sm group-hover:text-blue-700 transition-colors">{item.model}</p>
+                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">{item.resolution}</p>
+                                    </div>
+                                    <Plus size={16} className="text-gray-300 group-hover:text-blue-500" />
+                                </button>
+                            ))}
+                        </div>
                     </div>
+
+                    {lastAdded.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-green-50 p-6 rounded-3xl border border-green-100"
+                        >
+                            <h4 className="text-green-800 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <CheckCircle size={14} /> Recently Added
+                            </h4>
+                            <ul className="space-y-2">
+                                {lastAdded.map((item, idx) => (
+                                    <li key={idx} className="flex justify-between text-xs font-bold text-green-700">
+                                        <span>{item.model}</span>
+                                        <span>x {item.qty}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </motion.div>
+                    )}
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Enter Model & Quantity</label>
-                        <textarea
-                            className="w-full h-64 border border-gray-200 rounded-xl p-4 font-mono text-sm bg-gray-50 focus:ring-2 focus:ring-[#003366] outline-none resize-none"
-                            placeholder={`3256FLSM 10\n4310FLSM 5\n50QLED 2`}
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                        ></textarea>
-                        <p className="text-xs text-gray-400 mt-2 flex items-center gap-1"><Info size={12} /> Format: [Model Code] [Space] [Quantity] (One per line)</p>
-                    </div>
-                    <div className="flex flex-col justify-center space-y-4">
-                        <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-                            <h4 className="font-bold text-[#003366] mb-2 flex items-center gap-2"><Info size={16} /> Instructions</h4>
-                            <ul className="text-sm text-gray-600 space-y-2 list-disc pl-4">
-                                <li>Use standard model codes found in the catalog.</li>
-                                <li>Enter quantity separated by a space.</li>
-                                <li>Each item on a new line.</li>
-                            </ul>
+                {/* Right/Main Column: Order Pad */}
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="lg:col-span-2 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden"
+                >
+                    <div className="bg-[#003366] px-8 py-10 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-white/10 rounded-2xl text-[#FFD700] backdrop-blur-md"><ClipboardList size={28} /></div>
+                            <div>
+                                <h2 className="text-2xl font-black text-white leading-tight">Fast Order Pad</h2>
+                                <p className="text-blue-200 text-xs font-medium uppercase tracking-widest">Enterprise Bulk Input</p>
+                            </div>
                         </div>
-                        <button
-                            onClick={handleParse}
-                            className="w-full bg-[#003366] text-white font-bold py-4 rounded-xl hover:bg-[#FFD700] hover:text-[#003366] transition-all shadow-lg flex justify-center items-center gap-2 active:scale-95 transform"
-                        >
-                            Verify & Add to Quote <ArrowUpDown size={16} />
-                        </button>
+                        <div className="hidden sm:block text-right">
+                            <p className="text-white font-black text-xl">₹ FAST</p>
+                            <p className="text-blue-300 text-[10px] font-bold">1-CLICK PROCESSING</p>
+                        </div>
                     </div>
-                </div>
-            </motion.div>
+
+                    <div className="p-8">
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center px-1">
+                                    <label className="text-xs font-black text-[#003366] uppercase tracking-widest">Input Area</label>
+                                    <button onClick={() => setInput('')} className="text-xs font-bold text-red-500 hover:underline">Clear All</button>
+                                </div>
+                                <textarea
+                                    className="w-full h-80 border-2 border-gray-100 rounded-3xl p-6 font-mono text-sm bg-gray-50 focus:ring-4 focus:ring-blue-500/10 focus:border-[#003366] outline-none resize-none transition-all shadow-inner"
+                                    placeholder={`3256FLSM 10\n4310FLSM 5\n50QLED 2`}
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                ></textarea>
+                                <p className="text-[10px] text-gray-400 font-medium flex items-center gap-1.5"><Info size={14} className="text-blue-400" /> Format: MODELCODE [SPACE] QUANTITY (One SKU per line)</p>
+                            </div>
+
+                            <div className="flex flex-col justify-between">
+                                <div className="bg-blue-50/50 p-6 rounded-3xl border border-blue-100/50 space-y-6">
+                                    <div>
+                                        <h4 className="font-black text-[#003366] text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
+                                            <Zap size={16} fill="currentColor" /> Why use this?
+                                        </h4>
+                                        <ul className="text-xs text-[#003366]/70 space-y-3 font-medium">
+                                            <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1" /> For regular dealers who know our model codes by heart.</li>
+                                            <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1" /> Paste bulk lists from Excel or WhatsApp directly.</li>
+                                            <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1" /> Bypass the catalog UI for faster quote generation.</li>
+                                        </ul>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-2xl border border-blue-100/50 shadow-sm">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase mb-2">Example Line</p>
+                                        <code className="text-xs font-black text-[#003366] bg-blue-50 px-2 py-1 rounded">3256FLSM 12</code>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={handleParse}
+                                    disabled={!input.trim()}
+                                    className="w-full bg-[#003366] text-white font-black py-5 rounded-3xl hover:bg-[#FFD700] hover:text-[#003366] transition-all shadow-xl shadow-blue-900/40 flex justify-center items-center gap-3 active:scale-95 transform disabled:opacity-50 disabled:cursor-not-allowed mt-8 lg:mt-0"
+                                >
+                                    VERIFY & PROCESS LIST <ArrowUpDown size={20} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
         </div>
     );
 };
+
 
 // --- EnquiryForm Component ---
 export const EnquiryForm = ({ onFormSubmit }) => {

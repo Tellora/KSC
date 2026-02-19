@@ -1,11 +1,12 @@
 import React from 'react';
-import { Home, Grid, ShoppingCart, User, Phone } from 'lucide-react';
+import { Home, Grid, ShoppingCart, User, Phone, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const MobileNav = ({ activeTab, setActiveTab, cartCount, toggleCart }) => {
     const navItems = [
         { id: 'home', icon: Home, label: 'Home' },
         { id: 'catalog', icon: Grid, label: 'Catalog' },
+        { id: 'quicktools', icon: ShieldCheck, label: 'Care' },
         { id: 'contact', icon: Phone, label: 'Contact' },
     ];
 
