@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Menu, X, Search, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BUSINESS_CONFIG } from '../data/config';
+import logo from '../assets/ksc_logo.png';
 
 const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, setSearchQuery }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,10 +24,23 @@ const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, s
                     className="flex items-center gap-2 md:gap-3 cursor-pointer flex-shrink-0 group"
                     onClick={() => setActiveTab('home')}
                 >
-                    <div className="relative">
-                        <div className="absolute inset-0 bg-[#FFD700] rounded blur opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div className="relative bg-[#FFD700] p-1.5 md:p-2 rounded text-[#003366] font-black text-xl md:text-2xl tracking-tighter shadow-lg group-hover:rotate-6 transition-transform">KS</div>
-                    </div>
+                    <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="relative w-16 md:w-20 h-12 md:h-16 flex items-center justify-start group-hover:-translate-y-1 transition-all duration-500"
+                    >
+                        {/* Soft ambient back-glow with continuous pulse */}
+                        <motion.div
+                            animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.2, 1.35, 1.2] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute inset-0 bg-white/40 blur-[15px] rounded-full group-hover:bg-[#FFD700]/40 transition-all duration-500"
+                        />
+                        <img
+                            src={logo}
+                            alt="KSC Logo"
+                            className="w-full h-full object-contain relative z-10 drop-shadow-[0px_0px_2px_rgba(255,255,255,0.9)] drop-shadow-[0px_0px_6px_rgba(255,255,255,0.5)] group-hover:scale-110 group-hover:drop-shadow-[0px_0px_12px_rgba(255,215,0,0.8)] transition-all duration-500"
+                        />
+                    </motion.div>
                     <div>
                         <h1 className="text-lg md:text-xl font-bold leading-none text-white tracking-wide">{BUSINESS_CONFIG.name}</h1>
                         <p className="text-[8px] md:text-[10px] text-blue-200 tracking-[0.2em] font-medium mt-0.5 md:mt-1 hidden sm:block">WHOLESALE ELECTRONICS</p>
@@ -34,16 +48,18 @@ const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, s
                 </div>
 
                 {/* Search Bar (Desktop & Mobile Compact) */}
-                <div className="flex-1 max-w-xl relative group mx-2 md:mx-0">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-[#FFD700] rounded-full opacity-0 group-hover:opacity-20 blur transition-opacity duration-300"></div>
+                <div className="flex-1 max-w-xl relative group mx-2 md:mx-0 z-50 pointer-events-auto">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-[#FFD700] rounded-full opacity-0 group-hover:opacity-20 blur transition-opacity duration-300 pointer-events-none"></div>
                     <input
                         type="text"
                         placeholder="Search model codes (e.g. 3256FLSM)..."
-                        className="w-full bg-[#002850] text-white placeholder-blue-300/50 rounded-full px-4 py-2 md:px-6 md:py-3 pl-10 md:pl-12 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition-all shadow-inner border border-white/5"
+                        className="w-full bg-[#002850] text-white placeholder-blue-300/50 rounded-full px-4 py-2 md:px-6 md:py-3 pl-10 md:pl-12 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition-all shadow-inner border border-white/5 relative z-10 pointer-events-auto"
                         value={searchQuery}
                         onChange={(e) => {
                             setSearchQuery(e.target.value);
-                            if (e.target.value) setActiveTab('catalog');
+                            if (e.target.value && activeTab !== 'catalog') {
+                                setActiveTab('catalog');
+                            }
                         }}
                     />
                     <Search className="absolute left-3 top-2.5 md:top-3.5 text-blue-300 group-hover:text-[#FFD700] transition-colors" size={18} />

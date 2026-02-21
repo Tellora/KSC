@@ -8,8 +8,8 @@ import CompareModal from './components/CompareModal';
 import MobileNav from './components/MobileNav'; // Import the new mobile nav
 import { Footer, FloatingWhatsApp } from './components/Footer';
 import { StatsSection, Features, Newsletter, Testimonials, ProcessFlow, FAQ, BrandPartners, DeliveryTicker } from './components/HomeSections';
-import { Contact, History, EnquiryForm, FastOrder, QuickTools } from './components/OtherPages';
-import { Zap, Truck, CheckCircle, Info } from 'lucide-react';
+import { Contact, History, EnquiryForm, FastOrder } from './components/OtherPages';
+import { Zap, Truck, CheckCircle, Info, Package } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Flash Sale Banner ---
@@ -141,7 +141,10 @@ const App = () => {
                         <ProcessFlow />
                         <Features />
                         <BrandPartners />
-                        <div className="py-24 text-center bg-white relative overflow-hidden bg-noise">
+                        <div className="py-24 md:py-32 text-center bg-[#000a14] relative overflow-hidden border-b border-white/5">
+                            {/* Ambient background glow */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[150px] pointer-events-none"></div>
+
                             {/* Added Featured Categories Section */}
                             <motion.div
                                 initial={{ opacity: 0, y: 50 }}
@@ -149,12 +152,18 @@ const App = () => {
                                 transition={{ duration: 0.8 }}
                                 className="max-w-7xl mx-auto px-4 relative z-10"
                             >
-                                <h2 className="text-4xl font-black text-[#003366] mb-16">Featured Categories</h2>
-                                <div className="grid md:grid-cols-3 gap-10">
+                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 mb-6 mx-auto">
+                                    <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse"></span>
+                                    <span className="text-xs font-bold text-blue-300 uppercase tracking-widest">High Volume Asset Classes</span>
+                                </motion.div>
+                                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Intelligence Base Categories</h2>
+                                <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 px-4">Direct access to the most liquid and profitable panel categories.</p>
+
+                                <div className="grid md:grid-cols-3 gap-8 md:gap-10">
                                     {[
-                                        { title: "32\" Budget Series", desc: "Volume Driver • Starts ₹7,100", img: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&q=80&w=600", action: () => { setSearchQuery(''); setActiveTab('catalog'); } },
-                                        { title: "43\" Smart Series", desc: "Hotel Favorite • FHD Android", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=600", action: () => { setSearchQuery(''); setActiveTab('catalog'); } },
-                                        { title: "Premium QLEDs", desc: "High Margin • 4K WebOS", img: "https://images.unsplash.com/photo-1509281373149-e957c629640d?auto=format&fit=crop&q=80&w=600", action: () => { setSearchQuery(''); setActiveTab('catalog'); } }
+                                        { title: "32\" Budget Series", desc: "Highest Velocity • Standard Grade", action: () => { setSearchQuery(''); setActiveTab('catalog'); } },
+                                        { title: "43\" Smart Series", desc: "Commercial Standard • A+ Frameless", action: () => { setSearchQuery(''); setActiveTab('catalog'); } },
+                                        { title: "Premium QLEDs", desc: "Maximum Margin • Tier-1 Grade", action: () => { setSearchQuery(''); setActiveTab('catalog'); } }
                                     ].map((c, i) => (
                                         <motion.div
                                             key={i}
@@ -162,12 +171,18 @@ const App = () => {
                                             whileInView={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.2 }}
                                             onClick={c.action}
-                                            className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg h-80 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3"
+                                            className="group relative rounded-[2rem] overflow-hidden cursor-pointer shadow-lg h-80 hover:shadow-[0_0_40px_rgba(37,99,235,0.2)] transition-all duration-500 transform hover:-translate-y-3 border border-white/10 bg-[#001224]"
                                         >
-                                            <img src={c.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" alt={c.title} />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-[#003366] via-[#003366]/40 to-transparent flex flex-col justify-end p-8 text-left">
-                                                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors translate-y-2 group-hover:translate-y-0 duration-300">{c.title}</h3>
-                                                <p className="text-gray-300 font-medium group-hover:text-white transition-colors opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 duration-300">{c.desc}</p>
+                                            {/* Abstract tech pattern background instead of stock image */}
+                                            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 group-hover:opacity-50 transition-opacity"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-[#000a14] via-transparent to-blue-900/20 group-hover:to-blue-600/30 transition-colors"></div>
+
+                                            <div className="absolute inset-0 flex flex-col justify-end p-8 text-left z-10">
+                                                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-[#FFD700]/10 group-hover:border-[#FFD700]/30 transition-all duration-300">
+                                                    <Package className="text-gray-400 group-hover:text-[#FFD700] transition-colors" size={24} />
+                                                </div>
+                                                <h3 className="text-2xl font-black text-white mb-2 group-hover:text-blue-300 transition-colors duration-300 tracking-wide">{c.title}</h3>
+                                                <p className="text-gray-400 font-medium group-hover:text-white transition-colors duration-300 text-sm">{c.desc}</p>
                                             </div>
                                         </motion.div>
                                     ))}
@@ -195,20 +210,27 @@ const App = () => {
             case 'history': return <History orders={orders} />;
             case 'bulkenquiry': return <EnquiryForm onFormSubmit={() => showToast('Enquiry Sent Successfully', 'success')} />;
             case 'contact': return <Contact />;
-            case 'quicktools': return <QuickTools />;
+            // case 'quicktools': return <QuickTools />;
             case 'fastorder': return <FastOrder addToCart={addToCart} />;
             default: return <Hero setActiveTab={setActiveTab} />;
         }
     };
-
     return (
-        <div className="min-h-screen bg-[#F4F6F8] font-sans text-gray-800 flex flex-col pb-16 md:pb-0">
+        <div className="min-h-screen bg-[#F4F6F8] relative font-sans text-gray-800 flex flex-col pb-16 md:pb-0">
+            {/* Ambient Background Gradients for Depth */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl opacity-50 mix-blend-multiply"></div>
+                <div className="absolute top-1/2 right-0 w-80 h-80 bg-[#FFD700]/20 rounded-full blur-3xl opacity-50 mix-blend-multiply"></div>
+                <div className="absolute -bottom-20 left-1/4 w-[500px] h-[500px] bg-blue-100/40 rounded-full blur-3xl opacity-50 mix-blend-multiply"></div>
+            </div>
+
             <AnimatePresence>
                 {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
             </AnimatePresence>
 
             <FlashSaleBanner />
             {/* Header simplified for mobile or kept as is, but MobileNav added */}
+
             <Header
                 activeTab={activeTab}
                 setActiveTab={(tab) => { setActiveTab(tab); window.scrollTo(0, 0); }}
@@ -262,8 +284,9 @@ const App = () => {
                 isOpen={isCompareModalOpen}
                 onClose={() => setIsCompareModalOpen(false)}
                 addToCart={addToCart}
+                removeFromCompare={(id) => setCompareList(prev => prev.filter(item => item.id !== id))}
             />
-        </div>
+        </div >
     );
 };
 

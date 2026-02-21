@@ -1,7 +1,9 @@
 import React from 'react';
-import { X, ShoppingCart, Trash2, MessageCircle } from 'lucide-react';
+import { X, ShoppingCart, Trash2, MessageCircle, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BUSINESS_CONFIG } from '../data/config';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSaveQuote }) => {
     const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
@@ -23,6 +25,92 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
         if (cart.length === 0) return;
         onSaveQuote(cart, estimatedTotal);
         window.open(generateWhatsAppLink(), '_blank');
+    };
+
+    const generatePDF = () => {
+        if (cart.length === 0) return;
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFillColor(0, 51, 102); // #003366
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 215, 0); // #FFD700
+        doc.setFontSize(24);
+        doc.setFont("helvetica", "bold");
+        doc.text(BUSINESS_CONFIG.name, 14, 25);
+
+        doc.setFontSize(10);
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "normal");
+        doc.text("Official Trade Quotation", 14, 32);
+
+        // Date & Ref
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(10);
+        const dateStr = new Date().toLocaleDateString();
+        const refNo = "KS-" + Math.floor(Math.random() * 90000 + 10000);
+        doc.text(`Date: ${dateStr}`, 150, 50);
+        doc.text(`Ref No: ${refNo}`, 150, 57);
+
+        // From details
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("From:", 14, 50);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(BUSINESS_CONFIG.address, 14, 57, { maxWidth: 80 });
+        doc.text(`Phone: ${BUSINESS_CONFIG.phone}`, 14, 75);
+
+        // Table
+        const tableColumn = ["Model", "Resolution", "Qty", "Unit Price (INR)", "Total (INR)"];
+        const tableRows = [];
+
+        cart.forEach(item => {
+            const rowData = [
+                item.model,
+                item.resolution,
+                item.qty.toString(),
+                item.price.toLocaleString(),
+                (item.price * item.qty).toLocaleString()
+            ];
+            tableRows.push(rowData);
+        });
+
+        doc.autoTable({
+            startY: 85,
+            head: [tableColumn],
+            body: tableRows,
+            theme: 'grid',
+            headStyles: { fillColor: [0, 51, 102], textColor: [255, 255, 255] },
+            styles: { font: "helvetica", fontSize: 10 }
+        });
+
+        // Totals
+        const finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("Quotation Summary:", 135, finalY);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Total Units: ${totalItems}`, 135, finalY + 8);
+
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 51, 102);
+        doc.text(`Total Value: INR ${estimatedTotal.toLocaleString()}`, 135, finalY + 18);
+
+        // Terms
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.setFont("helvetica", "normal");
+        doc.text("Terms & Conditions:", 14, finalY + 30);
+        doc.text("1. Prices are exclusive of GST.", 14, finalY + 36);
+        doc.text("2. Quotation valid for 7 days.", 14, finalY + 41);
+        doc.text("3. Subject to stock availability at the time of order confirmation.", 14, finalY + 46);
+
+        // Save
+        onSaveQuote(cart, estimatedTotal);
+        doc.save(`${BUSINESS_CONFIG.name.replace(/ /g, '_')}_Quotation_${refNo}.pdf`);
     };
 
     return (
@@ -123,13 +211,23 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
                                 * Prices subject to quantity & market fluctuation.
                             </p>
 
-                            <button
-                                onClick={handleSend}
-                                className={`w-full py-4 rounded-xl font-bold text-center flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 ${cart.length === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#25D366] text-white hover:bg-[#20bd5a]'}`}
-                                disabled={cart.length === 0}
-                            >
-                                <MessageCircle size={20} /> Send Quote via WhatsApp
-                            </button>
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={generatePDF}
+                                    className={`w-full py-4 rounded-xl font-bold text-center flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 ${cart.length === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white border-2 border-[#003366] text-[#003366] hover:bg-blue-50'}`}
+                                    disabled={cart.length === 0}
+                                >
+                                    <Download size={20} /> Download PDF Quote
+                                </button>
+
+                                <button
+                                    onClick={handleSend}
+                                    className={`w-full py-4 rounded-xl font-bold text-center flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 ${cart.length === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#25D366] text-white hover:bg-[#20bd5a]'}`}
+                                    disabled={cart.length === 0}
+                                >
+                                    <MessageCircle size={20} /> Send via WhatsApp
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 </>

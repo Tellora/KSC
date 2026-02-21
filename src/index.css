@@ -1,6 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        font-family: 'Outfit', sans-serif;
+    }
+}
 
 @layer utilities {
     .glass-card {
@@ -20,6 +28,7 @@
     .text-gradient-gold {
         background: linear-gradient(to right, #FFD700, #FDB931);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
