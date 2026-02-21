@@ -94,14 +94,19 @@ export const ProcessFlow = () => {
     );
 };
 
-export const FAQ = () => {
+export const FAQ = ({ userMode }) => {
     const [openIndex, setOpenIndex] = useState(null);
 
-    const faqs = [
+    const faqs = userMode === 'b2b' ? [
         { q: "What is the Enterprise Minimum Order Quantity (MOQ)?", a: "Our optimized MOQ is 5 units per specific model variant. For initial quality assurance, registered dealers may request single unit evaluations at wholesale pricing." },
         { q: "Is GST Input Credit enabled for all purchases?", a: "Yes, 100% compliant. We mandate B2B tax invoicing on every dispatch, enabling full GST input credit for your retail entity." },
         { q: "How is transit integrity maintained?", a: "Every outbound PO is secured in custom wooden crates and fully insured. Transit damages reported within 24h with unboxing footage are instantly replaced." },
         { q: "What are the terms for channel partnerships?", a: "Credit facilities and localized exclusivity are unlocked for partners maintaining a 6-month consistent volume history, subject to risk assessment." },
+    ] : [
+        { q: "Do you offer doorstep installation?", a: "Yes, we provide free doorstep installation across major cities within 48 hours of delivery." },
+        { q: "What is your return policy?", a: "We offer a 7-day replacement guarantee for any manufacturing defects. Please keep the original packaging intact." },
+        { q: "Are EMI options available?", a: "Yes, we support No-Cost EMI on major credit cards and partner with leading finance providers." },
+        { q: "How long is the included warranty?", a: "All our retail televisions come with a standard 1-year comprehensive warranty, with options to extend." },
     ];
 
     return (
@@ -111,8 +116,8 @@ export const FAQ = () => {
 
             <div className="max-w-4xl mx-auto px-4 relative z-10">
                 <ScrollReveal className="text-center mb-16">
-                    <h2 className="text-4xl font-black text-white mb-4 tracking-tight">Intelligence Base</h2>
-                    <p className="text-gray-400">Common parameters for our B2B operations.</p>
+                    <h2 className="text-4xl font-black text-white mb-4 tracking-tight">{userMode === 'b2b' ? 'Intelligence Base' : 'Frequently Asked Questions'}</h2>
+                    <p className="text-gray-400">{userMode === 'b2b' ? 'Common parameters for our B2B operations.' : 'Everything you need to know about our products and services.'}</p>
                 </ScrollReveal>
 
                 <div className="space-y-4">
@@ -154,41 +159,60 @@ export const FAQ = () => {
     );
 };
 
-export const Features = () => (
-    <div className="py-24 md:py-32 bg-[#000a14] relative z-10 border-b border-white/5 overflow-hidden">
-        {/* Ambient Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+export const Features = ({ userMode }) => {
+    const featureList = userMode === 'b2b' ? [
+        { icon: ShieldCheck, title: "Verified Panels", desc: "100% A+ Grade Zero Dot panels stringently tested before sealing." },
+        { icon: Truck, title: "Safe Shipping", desc: "Highly secure, insured wooden crate packing for outstation logistics." },
+        { icon: Zap, title: "Fast Service", desc: "Dedicated enterprise technical support and prioritized spare parts." },
+        { icon: Award, title: "Best Margins", desc: "Factory-direct pricing matrix ensuring top-tier profitability." }
+    ] : [
+        { icon: ShieldCheck, title: "Premium Quality", desc: "Experience unmatched 4K Visuals and A+ Grade Panels for your home." },
+        { icon: Truck, title: "Fast Delivery", desc: "Quick and secure logistics with free delivery across the nation." },
+        { icon: Zap, title: "Smart Features", desc: "Integrated with latest WebOS and Android smart platforms." },
+        { icon: Star, title: "Excellent Support", desc: "Industry-leading after-sales service and 24/7 customer care." }
+    ];
 
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-            <ScrollReveal className="text-center mb-20">
-                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#FFD700]">Top Retailers</span> Choose {BUSINESS_CONFIG.name}</h2>
-                <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">We've built an infrastructure designed for speed, uncompromised reliability, and maximum profit margins for our B2B partners.</p>
-            </ScrollReveal>
+    return (
+        <div className="py-24 md:py-32 bg-[#000a14] relative z-10 border-b border-white/5 overflow-hidden">
+            {/* Ambient Grid overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full">
-                {[
-                    { icon: ShieldCheck, title: "Verified Panels", desc: "100% A+ Grade Zero Dot panels stringently tested before sealing." },
-                    { icon: Truck, title: "Safe Shipping", desc: "Highly secure, insured wooden crate packing for outstation logistics." },
-                    { icon: Zap, title: "Fast Service", desc: "Dedicated enterprise technical support and prioritized spare parts." },
-                    { icon: Award, title: "Best Margins", desc: "Factory-direct pricing matrix ensuring top-tier profitability." }
-                ].map((f, idx) => (
-                    <ScrollReveal key={idx} delay={idx * 0.1}>
-                        <div className="group h-full p-8 rounded-[2rem] bg-[#001224] hover:bg-white/5 shadow-lg border border-white/5 hover:border-blue-500/30 hover:-translate-y-2 transition-all duration-500 relative overflow-hidden flex flex-col">
-                            {/* Hover light effect */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+                <ScrollReveal className="text-center mb-20">
+                    <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                        {userMode === 'b2b' ? (
+                            <>Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#FFD700]">Top Retailers</span> Choose {BUSINESS_CONFIG.name}</>
+                        ) : (
+                            <>Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#FFD700]">Customers</span> Choose Us</>
+                        )}
+                    </h2>
+                    <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
+                        {userMode === 'b2b'
+                            ? "We've built an infrastructure designed for speed, uncompromised reliability, and maximum profit margins for our B2B partners."
+                            : "We bring premium electronics directly to your home with unmatched quality, fast delivery, and robust after-sales support."}
+                    </p>
+                </ScrollReveal>
 
-                            <div className="w-16 h-16 bg-[#000a14] border border-white/10 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-colors shadow-inner relative z-10">
-                                <f.icon size={32} strokeWidth={1.5} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full">
+                    {featureList.map((f, idx) => (
+                        <ScrollReveal key={idx} delay={idx * 0.1}>
+                            <div className="group h-full p-8 rounded-[2rem] bg-[#001224] hover:bg-white/5 shadow-lg border border-white/5 hover:border-blue-500/30 hover:-translate-y-2 transition-all duration-500 relative overflow-hidden flex flex-col">
+                                {/* Hover light effect */}
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+
+                                <div className="w-16 h-16 bg-[#000a14] border border-white/10 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-colors shadow-inner relative z-10">
+                                    <f.icon size={32} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="font-black text-white text-xl mb-3 tracking-wide">{f.title}</h3>
+                                <p className="text-gray-400 leading-relaxed text-sm flex-grow">{f.desc}</p>
                             </div>
-                            <h3 className="font-black text-white text-xl mb-3 tracking-wide">{f.title}</h3>
-                            <p className="text-gray-400 leading-relaxed text-sm flex-grow">{f.desc}</p>
-                        </div>
-                    </ScrollReveal>
-                ))}
+                        </ScrollReveal>
+                    ))}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 export const Newsletter = () => {
     const [phone, setPhone] = useState('');
@@ -305,50 +329,67 @@ export const Newsletter = () => {
     );
 };
 
-export const Testimonials = () => (
-    <div className="py-24 md:py-32 bg-[#001224] border-t border-white/5 relative overflow-hidden">
-        {/* Subtle background glow */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.05),transparent_50%)] pointer-events-none"></div>
+export const Testimonials = ({ userMode }) => {
+    const reviews = userMode === 'b2b' ? [
+        { user: "Rajesh Electronics", location: "Delhi", text: "Keshu's wholesale portal has completely changed our sourcing. The A+ grade panels and zero-defect guarantee let us scale with confidence.", rating: 5 },
+        { user: "Metro Vision Hub", location: "Mumbai", text: "Their logistic network is incredible. We get our wooden crated dispatches within 48 hours. Margins are unmatched.", rating: 5 },
+        { user: "TechZone Dealers", location: "Bangalore", text: "The B2B portal is intuitive. The dedicated enterprise tech support acts as our backend. An absolute game-changer.", rating: 5 }
+    ] : [
+        { user: "Amit S.", location: "Delhi NCR", text: "The picture quality is stunning. Setup was a breeze, and getting a 4K display at this price point is unbelievable.", rating: 5 },
+        { user: "Priya V.", location: "Mumbai", text: "I was skeptical about buying online, but the free doorstep installation and fast delivery won me over completely.", rating: 5 },
+        { user: "Ravi K.", location: "Hyderabad", text: "Excellent smart features. The WebOS is very smooth, and their customer care is incredibly responsive!", rating: 5 }
+    ];
 
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-            <ScrollReveal className="text-center mb-16 md:mb-24">
-                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Trusted by <span className="text-[#FFD700]">500+</span> Partners</h2>
-                <p className="text-gray-400 text-lg md:text-xl">Verified intelligence from retailers growing with {BUSINESS_CONFIG.name}</p>
-            </ScrollReveal>
+    return (
+        <div className="py-24 md:py-32 bg-[#001224] border-t border-white/5 relative overflow-hidden">
+            {/* Subtle background glow */}
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.05),transparent_50%)] pointer-events-none"></div>
 
-            <div className="grid md:grid-cols-3 gap-8 md:gap-10">
-                {[
-                    { name: "Rajesh Kumar", shop: "RK Digital, Karol Bagh", text: "Best rates in Delhi market. I have been buying 43 inch models for 2 years. Zero defect rate." },
-                    { name: "Amit Singh", shop: "Singh Electronics, Noida", text: "The automated replacement policy is flawless. They truly understand high-volume B2B requirements." },
-                    { name: "Vikas Jain", shop: "Jain & Sons, Jaipur", text: "Quality of the QLED series matches Tier-1 brands instantly but at factory-direct pricing." }
-                ].map((t, i) => (
-                    <ScrollReveal key={i} delay={i * 0.1}>
-                        <div className="bg-[#000a14] p-8 md:p-10 rounded-[2rem] relative hover:shadow-[0_0_40px_rgba(37,99,235,0.1)] transition-all duration-300 border border-white/5 hover:border-blue-500/30 group h-full flex flex-col justify-between">
-                            <div>
-                                <div className="absolute -top-5 left-8 bg-[#FFD700] p-3 rounded-xl shadow-lg rotate-3 group-hover:rotate-6 transition-transform">
-                                    <span className="text-2xl font-serif text-[#000a14]">❝</span>
-                                </div>
-                                <div className="mt-4 text-[#FFD700] mb-6 flex gap-1">
-                                    {[...Array(5)].map((_, j) => <Star key={j} fill="currentColor" size={16} />)}
-                                </div>
-                                <p className="text-gray-300 italic mb-8 leading-relaxed text-sm md:text-base">"{t.text}"</p>
-                            </div>
-                            <div className="flex items-center gap-4 border-t border-white/5 pt-6 mt-auto">
-                                <div className="w-12 h-12 bg-[#001224] border border-white/10 rounded-full flex items-center justify-center text-white font-black text-lg shadow-inner">
-                                    {t.name.charAt(0)}
-                                </div>
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+                <ScrollReveal className="text-center mb-16 md:mb-24">
+                    <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                        {userMode === 'b2b' ? (
+                            <>Trusted by <span className="text-[#FFD700]">500+</span> Partners</>
+                        ) : (
+                            <>Loved by <span className="text-blue-400">Thousands</span> of Customers</>
+                        )}
+                    </h2>
+                    <p className="text-gray-400 text-lg md:text-xl">
+                        {userMode === 'b2b' ? 'Verified intelligence from retailers growing with ' + BUSINESS_CONFIG.name : 'Read what our happy customers have to say about our premium products.'}
+                    </p>
+                </ScrollReveal>
+
+                <div className="grid md:grid-cols-3 gap-8 md:gap-10">
+                    {reviews.map((rev, i) => (
+                        <ScrollReveal key={i} delay={i * 0.1}>
+                            <div className="bg-[#000a14] p-8 md:p-10 rounded-[2rem] relative hover:shadow-[0_0_40px_rgba(37,99,235,0.1)] transition-all duration-300 border border-white/5 hover:border-blue-500/30 group h-full flex flex-col justify-between">
                                 <div>
-                                    <h4 className="font-bold text-white tracking-wide">{t.name}</h4>
-                                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">{t.shop}</p>
+                                    <div className="absolute -top-5 left-8 bg-[#FFD700] p-3 rounded-xl shadow-lg rotate-3 group-hover:rotate-6 transition-transform">
+                                        <span className="text-2xl font-serif text-[#000a14]">❝</span>
+                                    </div>
+                                    <div className="mt-4 text-[#FFD700] mb-6 flex gap-1">
+                                        {[...Array(5)].map((_, j) => <Star key={j} fill="currentColor" size={16} />)}
+                                    </div>
+                                    <p className="text-gray-300 italic mb-8 leading-relaxed text-sm md:text-base">"{rev.text}"</p>
+                                </div>
+                                <div className="flex items-center gap-4 border-t border-white/5 pt-6 mt-auto">
+                                    <div className="w-12 h-12 bg-[#001224] border border-white/10 rounded-full flex items-center justify-center text-white font-black text-lg shadow-inner">
+                                        {rev.user.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-white tracking-wide">{rev.user}</h4>
+                                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">{rev.location}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </ScrollReveal>
-                ))}
+                        </ScrollReveal>
+                    ))}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
+
 export const BrandPartners = () => {
     const brands = ["Samsung", "LG", "Sony", "Panasonic", "TCL", "Hisense", "Xiaomi"];
     return (

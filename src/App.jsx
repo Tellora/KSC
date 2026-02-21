@@ -76,6 +76,7 @@ const Toast = ({ message, type, onClose }) => {
 
 // --- Main App ---
 const App = () => {
+    const [userMode, setUserMode] = useState('b2b'); // 'retail' or 'b2b'
     const [activeTab, setActiveTab] = useState('home');
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cart, setCart] = useState([]);
@@ -135,12 +136,12 @@ const App = () => {
             case 'home':
                 return (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        <Hero setActiveTab={setActiveTab} />
-                        <DeliveryTicker />
-                        <StatsSection />
-                        <ProcessFlow />
-                        <Features />
-                        <BrandPartners />
+                        <Hero setActiveTab={setActiveTab} userMode={userMode} />
+                        {userMode === 'b2b' && <DeliveryTicker />}
+                        {userMode === 'b2b' && <StatsSection />}
+                        {userMode === 'b2b' && <ProcessFlow />}
+                        <Features userMode={userMode} />
+                        {userMode === 'b2b' && <BrandPartners />}
                         <div className="py-24 md:py-32 text-center bg-[#000a14] relative overflow-hidden border-b border-white/5">
                             {/* Ambient background glow */}
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[150px] pointer-events-none"></div>
@@ -153,11 +154,11 @@ const App = () => {
                                 className="max-w-7xl mx-auto px-4 relative z-10"
                             >
                                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 mb-6 mx-auto">
-                                    <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse"></span>
-                                    <span className="text-xs font-bold text-blue-300 uppercase tracking-widest">High Volume Asset Classes</span>
+                                    <span className={`w-2 h-2 rounded-full ${userMode === 'b2b' ? 'bg-[#FFD700]' : 'bg-blue-400'} animate-pulse`}></span>
+                                    <span className="text-xs font-bold text-blue-300 uppercase tracking-widest">{userMode === 'b2b' ? 'High Volume Asset Classes' : 'Popular Display Sizes'}</span>
                                 </motion.div>
-                                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Intelligence Base Categories</h2>
-                                <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 px-4">Direct access to the most liquid and profitable panel categories.</p>
+                                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">{userMode === 'b2b' ? 'Intelligence Base Categories' : 'Featured Collections'}</h2>
+                                <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 px-4">{userMode === 'b2b' ? 'Direct access to the most liquid and profitable panel categories.' : 'Explore our top-selling models designed for every home.'}</p>
 
                                 <div className="grid md:grid-cols-3 gap-8 md:gap-10">
                                     {[
@@ -189,8 +190,8 @@ const App = () => {
                                 </div>
                             </motion.div>
                         </div>
-                        <FAQ />
-                        <Testimonials />
+                        <FAQ userMode={userMode} />
+                        <Testimonials userMode={userMode} />
                         <Newsletter />
                     </motion.div>
                 );
@@ -204,6 +205,7 @@ const App = () => {
                             compareList={compareList}
                             setCompareList={setCompareList}
                             openCompareModal={() => setIsCompareModalOpen(true)}
+                            userMode={userMode}
                         />
                     </motion.div>
                 );
@@ -238,6 +240,8 @@ const App = () => {
                 toggleCart={() => setIsCartOpen(true)}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                userMode={userMode}
+                setUserMode={setUserMode}
             />
 
             <main className="flex-grow">
@@ -261,6 +265,7 @@ const App = () => {
                 setActiveTab={(tab) => { setActiveTab(tab); window.scrollTo(0, 0); }}
                 cartCount={cart.reduce((a, b) => a + b.qty, 0)}
                 toggleCart={() => setIsCartOpen(true)}
+                userMode={userMode}
             />
 
             <QuoteCart
@@ -270,6 +275,7 @@ const App = () => {
                 updateQuantity={updateQuantity}
                 removeFromCart={removeFromCart}
                 onSaveQuote={saveQuoteOrder}
+                userMode={userMode}
             />
 
             <ProductModal
@@ -277,6 +283,7 @@ const App = () => {
                 isOpen={!!selectedProduct}
                 onClose={() => setSelectedProduct(null)}
                 onAddToCart={addToCart}
+                userMode={userMode}
             />
 
             <CompareModal

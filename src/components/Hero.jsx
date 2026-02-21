@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ChevronRight, ShieldCheck, Box, Zap, Truck, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, ShieldCheck, Box, Zap, Truck, CheckCircle2, Star } from 'lucide-react';
 
-const Hero = ({ setActiveTab }) => {
+const Hero = ({ setActiveTab, userMode }) => {
     const { scrollY } = useScroll();
 
     // Parallax effects on scroll rather than mouse move for a more massive, planted feel
@@ -35,23 +35,32 @@ const Hero = ({ setActiveTab }) => {
                         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}
                         className="mb-8 inline-flex items-center gap-2"
                     >
-                        <span className="flex h-1.5 w-1.5 rounded-full bg-[#FFD700] ring-4 ring-[#FFD700]/20 animate-pulse"></span>
-                        <span className="text-xs font-bold tracking-[0.2em] text-[#FFD700] uppercase">India's Largest B2B Hub</span>
+                        <span className={`flex h-1.5 w-1.5 rounded-full ${userMode === 'b2b' ? 'bg-[#FFD700] ring-[#FFD700]/20' : 'bg-blue-400 ring-blue-400/20'} ring-4 animate-pulse`}></span>
+                        <span className={`text-xs font-bold tracking-[0.2em] uppercase ${userMode === 'b2b' ? 'text-[#FFD700]' : 'text-blue-400'}`}>
+                            {userMode === 'b2b' ? "India's Largest B2B Hub" : "Premium Electronic Devices"}
+                        </span>
                     </motion.div>
 
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
                         className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black leading-[1.05] tracking-tight text-white mb-6"
                     >
-                        Scale Your <br className="hidden sm:block" />
-                        Retail Network.
+                        {userMode === 'b2b' ? (
+                            <>Scale Your <br className="hidden sm:block" />Retail Network.</>
+                        ) : (
+                            <>Upgrade Your <br className="hidden sm:block" />Visual Experience.</>
+                        )}
                     </motion.h1>
 
                     <motion.p
                         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                         className="text-lg md:text-2xl text-gray-400 max-w-2xl font-light leading-relaxed mb-10"
                     >
-                        Access <strong className="text-white font-medium">zero-defect A+ grade panels</strong> directly from the source. GST billing, guaranteed replacements, and 24-hour dispatch nationwide.
+                        {userMode === 'b2b' ? (
+                            <>Access <strong className="text-white font-medium">zero-defect A+ grade panels</strong> directly from the source. GST billing, guaranteed replacements, and 24-hour dispatch nationwide.</>
+                        ) : (
+                            <>Discover <strong className="text-white font-medium">unparalleled cinematic quality</strong> for your home. Enjoy 4K HDR displays with immersive smart features and premium home support.</>
+                        )}
                     </motion.p>
 
                     <motion.div
@@ -62,14 +71,24 @@ const Hero = ({ setActiveTab }) => {
                             onClick={() => setActiveTab('catalog')}
                             className="flex items-center justify-center gap-3 px-10 py-5 bg-white text-[#000a14] rounded-sm font-black uppercase tracking-widest transition-all hover:bg-gray-100 shadow-[0_4px_30px_rgba(255,255,255,0.15)] group"
                         >
-                            View Inventory <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            {userMode === 'b2b' ? "View Inventory" : "Shop Collection"} <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                         </button>
-                        <button
-                            onClick={() => setActiveTab('bulkenquiry')}
-                            className="flex items-center justify-center gap-3 px-10 py-5 bg-transparent text-white rounded-sm font-black uppercase tracking-widest transition-all border-2 border-white/20 hover:border-white hover:bg-white/5"
-                        >
-                            Bulk Pricing Matrix
-                        </button>
+                        {userMode === 'b2b' && (
+                            <button
+                                onClick={() => setActiveTab('bulkenquiry')}
+                                className="flex items-center justify-center gap-3 px-10 py-5 bg-transparent text-white rounded-sm font-black uppercase tracking-widest transition-all border-2 border-white/20 hover:border-white hover:bg-white/5"
+                            >
+                                Bulk Pricing Matrix
+                            </button>
+                        )}
+                        {userMode === 'retail' && (
+                            <button
+                                onClick={() => setActiveTab('catalog')}
+                                className="flex items-center justify-center gap-3 px-10 py-5 bg-transparent text-white rounded-sm font-black uppercase tracking-widest transition-all border-2 border-blue-500/50 hover:border-blue-400 hover:bg-blue-500/10"
+                            >
+                                Explore Features
+                            </button>
+                        )}
                     </motion.div>
 
                     {/* Trust Indicators under buttons */}
@@ -77,9 +96,19 @@ const Hero = ({ setActiveTab }) => {
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.6 }}
                         className="flex flex-wrap gap-x-8 gap-y-4 text-sm font-medium text-gray-400 pt-12 mt-12 border-t border-white/10"
                     >
-                        <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#FFD700]" /> 1 Year On-Site Warranty</div>
-                        <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#FFD700]" /> Assured Buyback</div>
-                        <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#FFD700]" /> 10,000+ Units Ready</div>
+                        {userMode === 'b2b' ? (
+                            <>
+                                <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#FFD700]" /> 1 Year On-Site Warranty</div>
+                                <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#FFD700]" /> Assured Buyback</div>
+                                <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#FFD700]" /> 10,000+ Units Ready</div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex items-center gap-2"><ShieldCheck size={18} className="text-blue-400" /> Extended Warranty Available</div>
+                                <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-blue-400" /> Free Doorstep Installation</div>
+                                <div className="flex items-center gap-2"><Star size={18} className="text-[#FFD700]" /> 5-Star Rated Service</div>
+                            </>
+                        )}
                     </motion.div>
                 </div>
             </div>

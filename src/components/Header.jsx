@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BUSINESS_CONFIG } from '../data/config';
 import logo from '../assets/ksc_logo.png';
 
-const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, setSearchQuery }) => {
+const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, setSearchQuery, userMode, setUserMode }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -14,7 +14,9 @@ const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, s
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navItems = ['Home', 'Catalog', 'History', 'Bulk Enquiry', 'Contact', 'Fast Order'];
+    const navItems = userMode === 'b2b'
+        ? ['Home', 'Catalog', 'History', 'Bulk Enquiry', 'Contact', 'Fast Order']
+        : ['Home', 'Catalog', 'History', 'Contact'];
 
     return (
         <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#003366]/90 backdrop-blur-md shadow-lg py-2' : 'bg-[#003366] py-3 md:py-4'}`}>
@@ -43,8 +45,26 @@ const Header = ({ activeTab, setActiveTab, cartCount, toggleCart, searchQuery, s
                     </motion.div>
                     <div>
                         <h1 className="text-lg md:text-xl font-bold leading-none text-white tracking-wide">{BUSINESS_CONFIG.name}</h1>
-                        <p className="text-[8px] md:text-[10px] text-blue-200 tracking-[0.2em] font-medium mt-0.5 md:mt-1 hidden sm:block">WHOLESALE ELECTRONICS</p>
+                        <p className="text-[8px] md:text-[10px] text-blue-200 tracking-[0.2em] font-medium mt-0.5 md:mt-1 hidden sm:block">
+                            {userMode === 'b2b' ? 'WHOLESALE ELECTRONICS' : 'PREMIUM ELECTRONICS'}
+                        </p>
                     </div>
+                </div>
+
+                {/* Mode Toggle (Mobile & Desktop) */}
+                <div className="flex items-center bg-[#001224] rounded-full border border-white/10 p-1 relative z-50 flex-shrink-0">
+                    <button
+                        onClick={() => setUserMode('retail')}
+                        className={`px-2 md:px-3 py-1 text-[10px] md:text-xs font-bold rounded-full transition-all ${userMode === 'retail' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        Retail
+                    </button>
+                    <button
+                        onClick={() => setUserMode('b2b')}
+                        className={`px-2 md:px-3 py-1 text-[10px] md:text-xs font-bold rounded-full transition-all ${userMode === 'b2b' ? 'bg-[#FFD700] text-[#000a14] shadow-md' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        B2B
+                    </button>
                 </div>
 
                 {/* Search Bar (Desktop & Mobile Compact) */}

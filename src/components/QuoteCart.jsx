@@ -5,12 +5,15 @@ import { BUSINESS_CONFIG } from '../data/config';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSaveQuote }) => {
+const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSaveQuote, userMode }) => {
     const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
-    const estimatedTotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+    const estimatedTotal = cart.reduce((acc, item) => {
+        const itemPrice = userMode === 'retail' ? Math.round(item.price * 1.3) : item.price;
+        return acc + (itemPrice * item.qty);
+    }, 0);
 
     const generateWhatsAppLink = () => {
-        let message = `*Bulk Order Inquiry - ${BUSINESS_CONFIG.name}*\n\nHello, I am interested in the following models:\n\n`;
+        let message = `*${userMode === 'b2b' ? 'Bulk Order Inquiry' : 'Retail Order'} - ${BUSINESS_CONFIG.name}*\n\nHello, I am interested in the following models:\n\n`;
         cart.forEach(item => {
             message += `• ${item.model}: ${item.qty} units @ ₹${item.price}\n`;
         });
@@ -42,7 +45,7 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
         doc.setFontSize(10);
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "normal");
-        doc.text("Official Trade Quotation", 14, 32);
+        doc.text(userMode === 'b2b' ? "Official Trade Quotation" : "Retail Estimate", 14, 32);
 
         // Date & Ref
         doc.setTextColor(50, 50, 50);
@@ -66,12 +69,13 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
         const tableRows = [];
 
         cart.forEach(item => {
+            const itemPrice = userMode === 'retail' ? Math.round(item.price * 1.3) : item.price;
             const rowData = [
                 item.model,
                 item.resolution,
                 item.qty.toString(),
-                item.price.toLocaleString(),
-                (item.price * item.qty).toLocaleString()
+                itemPrice.toLocaleString(),
+                (itemPrice * item.qty).toLocaleString()
             ];
             tableRows.push(rowData);
         });
@@ -85,11 +89,10 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
             styles: { font: "helvetica", fontSize: 10 }
         });
 
-        // Totals
         const finalY = doc.lastAutoTable.finalY + 15;
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text("Quotation Summary:", 135, finalY);
+        doc.text(userMode === 'b2b' ? "Quotation Summary:" : "Order Summary:", 135, finalY);
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
         doc.text(`Total Units: ${totalItems}`, 135, finalY + 8);
@@ -136,7 +139,7 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
                     >
                         <div className="bg-[#003366] p-4 text-white flex justify-between items-center shadow-md">
                             <h2 className="text-lg font-bold flex items-center gap-2">
-                                <ShoppingCart size={20} /> Build Your Quote
+                                <ShoppingCart size={20} /> {userMode === 'b2b' ? 'Build Your Quote' : 'Your Cart'}
                             </h2>
                             <button onClick={onClose} className="p-1 hover:bg-white/20 rounded-full transition-colors">
                                 <X size={24} />
@@ -147,7 +150,7 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
                             {cart.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
                                     <ShoppingCart size={48} className="opacity-20" />
-                                    <p>Your quote list is empty.</p>
+                                    <p>Your {userMode === 'b2b' ? 'quote list' : 'cart'} is empty.</p>
                                     <button
                                         onClick={onClose}
                                         className="text-[#003366] font-semibold hover:underline"
@@ -170,7 +173,7 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
                                                 <img src={item.image} className="w-16 h-16 object-cover rounded-lg bg-white shadow-sm" alt="" />
                                                 <div>
                                                     <h4 className="font-bold text-[#003366] text-sm">{item.model}</h4>
-                                                    <p className="text-sm font-semibold mt-1">₹{item.price.toLocaleString()}</p>
+                                                    <p className="text-sm font-semibold mt-1">₹{(userMode === 'retail' ? Math.round(item.price * 1.3) : item.price).toLocaleString()}</p>
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end gap-2">
@@ -217,7 +220,7 @@ const QuoteCart = ({ isOpen, onClose, cart, updateQuantity, removeFromCart, onSa
                                     className={`w-full py-4 rounded-xl font-bold text-center flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 ${cart.length === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white border-2 border-[#003366] text-[#003366] hover:bg-blue-50'}`}
                                     disabled={cart.length === 0}
                                 >
-                                    <Download size={20} /> Download PDF Quote
+                                    <Download size={20} /> {userMode === 'b2b' ? 'Download PDF Quote' : 'Download Order Estimate'}
                                 </button>
 
                                 <button

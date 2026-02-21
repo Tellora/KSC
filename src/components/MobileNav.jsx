@@ -2,7 +2,7 @@ import React from 'react';
 import { Home, Grid, ShoppingCart, User, Phone, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const MobileNav = ({ activeTab, setActiveTab, cartCount, toggleCart }) => {
+const MobileNav = ({ activeTab, setActiveTab, cartCount, toggleCart, userMode }) => {
     const navItems = [
         { id: 'home', icon: Home, label: 'Home' },
         { id: 'catalog', icon: Grid, label: 'Catalog' },
@@ -47,7 +47,7 @@ const MobileNav = ({ activeTab, setActiveTab, cartCount, toggleCart }) => {
                             </motion.span>
                         )}
                     </div>
-                    <span className="text-[10px] font-bold">Quote</span>
+                    <span className="text-[10px] font-bold">{userMode === 'b2b' ? 'Quote' : 'Cart'}</span>
                 </button>
             </div>
         </div>

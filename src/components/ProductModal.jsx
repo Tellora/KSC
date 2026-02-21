@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { X, Star, ShoppingCart, ShieldCheck, Cpu, Layers, Monitor, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
+const ProductModal = ({ product, isOpen, onClose, onAddToCart, userMode }) => {
     const [activeTab, setActiveTab] = useState('overview');
 
     if (!product) return null;
+
+    const displayPrice = userMode === 'retail' ? Math.round(product.price * 1.3) : product.price;
 
     const tabs = [
         { id: 'overview', label: 'Overview', icon: Layers },
@@ -80,8 +82,8 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
                                             <span className="text-[#003366] font-extrabold text-xs bg-blue-50 px-4 py-1.5 rounded-full uppercase tracking-widest">{product.category}</span>
                                         </div>
                                         <div className="flex items-baseline gap-3">
-                                            <span className="text-5xl font-black text-[#003366] tracking-tight">₹{product.price.toLocaleString()}</span>
-                                            <span className="text-gray-400 text-sm font-semibold">Volume Price (Excl. GST)</span>
+                                            <span className="text-5xl font-black text-[#003366] tracking-tight">₹{displayPrice.toLocaleString()}</span>
+                                            <span className="text-gray-400 text-sm font-semibold">{userMode === 'b2b' ? 'Volume Price (Excl. GST)' : 'Retail Price (Incl. Taxes)'}</span>
                                         </div>
                                     </div>
                                     <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors group">
@@ -146,10 +148,12 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
                                                                 {product.stock} Units
                                                             </div>
                                                         </div>
-                                                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                                                            <div className="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Bulk Purchase MOQ</div>
-                                                            <div className="text-xl font-black text-[#003366]">{product.moq} Units</div>
-                                                        </div>
+                                                        {userMode === 'b2b' && (
+                                                            <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                                                <div className="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Bulk Purchase MOQ</div>
+                                                                <div className="text-xl font-black text-[#003366]">{product.moq} Units</div>
+                                                            </div>
+                                                        )}
                                                         <div className="bg-blue-50/30 p-5 rounded-2xl border border-blue-100/50">
                                                             <div className="text-[10px] text-blue-400 uppercase font-black tracking-widest mb-1">Fast Dispatch</div>
                                                             <div className="text-xl font-black text-[#003366]">24-48 Hours</div>
@@ -244,7 +248,7 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
                                         onClick={() => { onAddToCart(product); onClose(); }}
                                         className="flex-[2] bg-[#003366] text-white py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-[#002244] transition-all transform active:scale-95 shadow-xl shadow-blue-900/40 flex justify-center items-center gap-3 group"
                                     >
-                                        <ShoppingCart size={20} className="group-hover:translate-x-1 transition-transform" /> Add to Quote
+                                        <ShoppingCart size={20} className="group-hover:translate-x-1 transition-transform" /> {userMode === 'b2b' ? 'Add to Quote' : 'Add to Cart'}
                                     </button>
                                     <button
                                         onClick={() => {

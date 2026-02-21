@@ -4,7 +4,7 @@ import { PRODUCT_DATABASE } from '../data/config';
 import ProductCard from './ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompareList, openCompareModal }) => {
+const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompareList, openCompareModal, userMode }) => {
     const [filter, setFilter] = useState('all');
     const [sortOrder, setSortOrder] = useState('default');
     const [viewMode, setViewMode] = useState('grid');
@@ -92,8 +92,8 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
                 {/* Header Section */}
                 <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
-                        <h2 className="text-4xl font-black text-white mb-2 tracking-tight">Wholesale Catalog</h2>
-                        <p className="text-blue-400/80 font-bold uppercase tracking-widest text-xs">Verified Enterprise Stock • Real-time Pricing</p>
+                        <h2 className="text-4xl font-black text-white mb-2 tracking-tight">{userMode === 'b2b' ? 'Wholesale Catalog' : 'Product Collection'}</h2>
+                        <p className="text-blue-400/80 font-bold uppercase tracking-widest text-xs">{userMode === 'b2b' ? 'Verified Enterprise Stock • Real-time Pricing' : 'Premium Retail Electronics • Quick Delivery'}</p>
                     </div>
                     <div className="flex gap-4">
                         <button
@@ -307,6 +307,7 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
                                             onOpenProduct={onOpenProduct}
                                             addToCart={addToCart}
                                             toggleCompare={toggleCompare}
+                                            userMode={userMode}
                                         />
                                     ))}
                                 </motion.div>
@@ -364,7 +365,7 @@ const Catalog = ({ addToCart, searchQuery, onOpenProduct, compareList, setCompar
                                             onClick={handleBulkAdd}
                                             className="bg-[#FFD700] text-[#000a14] px-8 py-3 rounded-full font-black text-xs hover:bg-white transition-all shadow-lg uppercase tracking-wider"
                                         >
-                                            Bulk Move to Quote
+                                            {userMode === 'b2b' ? 'Bulk Move to Quote' : 'Add Selected to Cart'}
                                         </button>
                                     )}
                                     <button
