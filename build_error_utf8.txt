@@ -1,0 +1,98 @@
+﻿node.exe : [31mx[39m Build 
+failed in 2.93s
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo          : 
+    NotSpecified: ([31mx[3  
+  9m Build failed in 2.93s:   
+ String) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId : 
+    NativeCommandError
+ 
+[31merror during build:
+[31msrc/App.jsx (11:51): 
+"QuickTools" is not exported 
+by "src/components/OtherPages.
+jsx", imported by 
+"src/App.jsx".[31m
+file: [36mC:/Users/pc/Desktop
+/keshu/src/App.jsx:11:51[31m
+[33m
+ 9: import { Footer, 
+FloatingWhatsApp } from 
+'./components/Footer';
+10: import { StatsSection, 
+Features, Newsletter, 
+Testimonials, ProcessFlow, 
+FAQ, BrandPartners, 
+DeliveryTicker } from './...
+11: import { Contact, 
+History, EnquiryForm, 
+FastOrder, QuickTools } from 
+'./components/OtherPages';
+                              
+                         ^
+12: import { Zap, Truck, 
+CheckCircle, Info } from 
+'lucide-react';
+13: import { motion, 
+AnimatePresence } from 
+'framer-motion';
+[31m
+    at getRollupError (file://
+/C:/Users/pc/Desktop/keshu/nod
+e_modules/rollup/dist/es/share
+d/parseAst.js:402:41)
+    at error (file:///C:/Users
+/pc/Desktop/keshu/node_modules
+/rollup/dist/es/shared/parseAs
+t.js:398:42)
+    at Module.error (file:///C
+:/Users/pc/Desktop/keshu/node_
+modules/rollup/dist/es/shared/
+node-entry.js:17040:16)
+    at Module.traceVariable (f
+ile:///C:/Users/pc/Desktop/kes
+hu/node_modules/rollup/dist/es
+/shared/node-entry.js:17452:29
+)
+    at 
+ModuleScope.findVariable (file
+:///C:/Users/pc/Desktop/keshu/
+node_modules/rollup/dist/es/sh
+ared/node-entry.js:15070:39)
+    at 
+ReturnValueScope.findVariable 
+(file:///C:/Users/pc/Desktop/k
+eshu/node_modules/rollup/dist/
+es/shared/node-entry.js:5673:3
+8)
+    at FunctionBodyScope.findV
+ariable (file:///C:/Users/pc/D
+esktop/keshu/node_modules/roll
+up/dist/es/shared/node-entry.j
+s:5673:38)
+    at 
+ReturnValueScope.findVariable 
+(file:///C:/Users/pc/Desktop/k
+eshu/node_modules/rollup/dist/
+es/shared/node-entry.js:5673:3
+8)
+    at FunctionBodyScope.findV
+ariable (file:///C:/Users/pc/D
+esktop/keshu/node_modules/roll
+up/dist/es/shared/node-entry.j
+s:5673:38)
+    at 
+BlockScope.findVariable (file:
+///C:/Users/pc/Desktop/keshu/n
+ode_modules/rollup/dist/es/sha
+red/node-entry.js:5673:38)[39
+m
